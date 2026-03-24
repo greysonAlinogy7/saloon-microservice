@@ -1,16 +1,21 @@
 package com.salon.controller;
 
 import com.salon.entity.User;
+import com.salon.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/user")
 public class UserController {
+    private  final UserRepository userRepository;
+
+    @PostMapping
+    public User createUser(@RequestBody User user){
+        return userRepository.save(user);
+    }
 
     @GetMapping()
     public User getUser(){
