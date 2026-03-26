@@ -1,4 +1,15 @@
 package com.saloon.repository;
 
-public interface CategoryRepository {
+import com.saloon.entity.Category;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+
+import java.util.Set;
+
+@Repository
+public interface CategoryRepository extends JpaRepository<Category, Long> {
+    Set<Category> findBySalonId(Long salonId);
+    Set<Category> getCategoriesBySalonId(Long salonId);
+
 }
