@@ -1,6 +1,7 @@
 package com.salon.service;
 
 import com.salon.domain.PaymentMethod;
+import com.salon.domain.PaymentOrderStatus;
 import com.salon.entity.PaymentOrder;
 import com.salon.payload.dto.BookingDTO;
 import com.salon.payload.dto.UserDTO;
@@ -107,5 +108,18 @@ public class PaymentService implements IPaymentService {
     @Override
     public String createStripePaymentLink(UserDTO user, Long amount, Long orderId) {
         return "";
+    }
+
+    @Override
+    public Boolean proceedPayment(PaymentOrder paymentOrder, Long paymentId, String paymentLinkId) {
+        if (paymentOrder.getStatus().equals(PaymentOrderStatus.PENDING)){
+            if (paymentOrder.getPaymentMethod().equals(PaymentMethod.NMB)){
+                PaymentOrder paymentOrder1 = new PaymentOrder();
+                paymentOrder1.setStatus(PaymentOrderStatus.SUCCESS);
+                paymentRepository.save(paymentOrder1);
+
+            }
+        }
+        return true;
     }
 }

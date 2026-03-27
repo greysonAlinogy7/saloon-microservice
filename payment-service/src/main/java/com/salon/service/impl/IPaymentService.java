@@ -12,6 +12,7 @@ public interface IPaymentService {
     PaymentOrder getPaymentOrderByPaymentId(String paymentId);
     PaymentLinkResponse createRazorpayPaymentLink(UserDTO user, Long amount, Long orderId);
     String createStripePaymentLink(UserDTO user, Long amount, Long orderId);
+    Boolean proceedPayment(PaymentOrder paymentOrder, Long paymentId, String paymentLinkId);
 
 
 
