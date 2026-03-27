@@ -52,7 +52,7 @@ public class BookingService implements IBookingService {
         List<Booking> existingBookings=getBookingBySalon(salonDTO.getId());
         LocalDate bookingDate = bookingStartTime.toLocalDate();
         LocalDateTime salonOpenTime = salonDTO.getOpenTime().atDate(bookingDate);
-        LocalDateTime salonCloseTime = salonDTO.getCloseTime().atDate(bookingDate);
+        LocalDateTime salonCloseTime = salonDTO.getCloseTime().atDate(salonOpenTime.toLocalDate());
 
         if (salonDTO.getCloseTime().isBefore(salonDTO.getOpenTime())) {
             salonCloseTime = salonCloseTime.plusMinutes(50);
