@@ -11,7 +11,6 @@ import com.salon.repository.BookingRepository;
 import com.salon.service.impl.IBookingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -55,7 +54,7 @@ public class BookingService implements IBookingService {
         LocalDateTime salonCloseTime = salonDTO.getCloseTime().atDate(salonOpenTime.toLocalDate());
 
         if (salonDTO.getCloseTime().isBefore(salonDTO.getOpenTime())) {
-            salonCloseTime = salonCloseTime.plusMinutes(50);
+            salonCloseTime = salonCloseTime.plusMinutes(60);
         }
 
 

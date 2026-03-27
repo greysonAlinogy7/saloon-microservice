@@ -74,7 +74,7 @@ public class BookingController {
 
     }
 
-    @GetMapping("/{bookingId}/status")
+    @PutMapping("/{bookingId}/status")
     public ResponseEntity<BookingDTO> updateBookingStatus(@PathVariable Long bookingId, @RequestParam BookingStatus status) throws Exception {
         Booking bookings = bookingService.updateBookingStatus(bookingId, status);
         return ResponseEntity.ok(BookingMapper.toDTO(bookings));
