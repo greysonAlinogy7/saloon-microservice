@@ -1,0 +1,284 @@
+version: "3.9"
+
+services:
+
+  # ================= DATABASES =================
+
+  userdb:
+    image: postgres
+    container_name: userdb
+    ports:
+      - "5431:5432"
+    networks:
+      - alinogy7
+    environment:
+      POSTGRES_DB: user-service
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Alinogy7
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  bookingdb:
+    image: postgres
+    container_name: bookingdb
+    ports:
+      - "5433:5432"
+    networks:
+      - alinogy7
+    environment:
+      POSTGRES_DB: booking-service
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Alinogy7
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  categorydb:
+    image: postgres
+    container_name: categorydb
+    ports:
+      - "5434:5432"
+    networks:
+      - alinogy7
+    environment:
+      POSTGRES_DB: category-service
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Alinogy7
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  paymentdb:
+    image: postgres
+    container_name: paymentdb
+    ports:
+      - "5435:5432"
+    networks:
+      - alinogy7
+    environment:
+      POSTGRES_DB: payment-service
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Alinogy7
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  salondb:
+    image: postgres
+    container_name: salondb
+    ports:
+      - "5437:5432"
+    networks:
+      - alinogy7
+    environment:
+      POSTGRES_DB: salon-service
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Alinogy7
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  service-offeringdb:
+    image: postgres
+    container_name: service-offeringdb
+    ports:
+      - "5436:5432"
+    networks:
+      - alinogy7
+    environment:
+      POSTGRES_DB: service-offering
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Alinogy7
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # ================= EUREKA =================
+
+  eureka-server:
+    image: "alinogy7/salon-eureka-server:v1"
+    container_name: eureka-server
+    ports:
+      - "8070:8070"
+    networks:
+      - alinogy7
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8070/actuator/health | grep UP || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+
+  # ================= MICROSERVICES =================
+
+  user:
+    image: "alinogy7/salon-user-service:v1"
+    container_name: user
+    depends_on:
+      userdb:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
+    ports:
+      - "5001:5001"
+    networks:
+      - alinogy7
+    environment:
+      SPRING_APPLICATION_NAME: user-service
+      SPRING_DATASOURCE_URL: jdbc:postgresql://userdb:5432/user-service
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: Alinogy7
+      EUREKA_CLIENT_REGISTER_WITH_EUREKA: "true"
+      EUREKA_CLIENT_FETCH_REGISTRY: "true"
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://eureka-server:8070/eureka/"
+      EUREKA_INSTANCE_PREFER_IP_ADDRESS: "true"
+      EUREKA_INSTANCE_LEASE_RENEWAL_INTERVAL_IN_SECONDS: "10"
+
+  booking:
+    image: "alinogy7/salon-booking-service:v1"
+    container_name: booking
+    depends_on:
+      bookingdb:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
+    ports:
+      - "5005:5005"
+    networks:
+      - alinogy7
+    environment:
+      SPRING_APPLICATION_NAME: booking-service
+      SPRING_DATASOURCE_URL: jdbc:postgresql://bookingdb:5432/booking-service
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: Alinogy7
+      EUREKA_CLIENT_REGISTER_WITH_EUREKA: "true"
+      EUREKA_CLIENT_FETCH_REGISTRY: "true"
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://eureka-server:8070/eureka/"
+      EUREKA_INSTANCE_PREFER_IP_ADDRESS: "true"
+      EUREKA_INSTANCE_LEASE_RENEWAL_INTERVAL_IN_SECONDS: "10"
+
+  category:
+    image: "alinogy7/salon-category-service:v1"
+    container_name: category
+    depends_on:
+      categorydb:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
+    ports:
+      - "5003:5003"
+    networks:
+      - alinogy7
+    environment:
+      SPRING_APPLICATION_NAME: category-service
+      SPRING_DATASOURCE_URL: jdbc:postgresql://categorydb:5432/category-service
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: Alinogy7
+      EUREKA_CLIENT_REGISTER_WITH_EUREKA: "true"
+      EUREKA_CLIENT_FETCH_REGISTRY: "true"
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://eureka-server:8070/eureka/"
+      EUREKA_INSTANCE_PREFER_IP_ADDRESS: "true"
+      EUREKA_INSTANCE_LEASE_RENEWAL_INTERVAL_IN_SECONDS: "10"
+
+  payment:
+    image: "alinogy7/salon-payment-service:v1"
+    container_name: payment
+    depends_on:
+      paymentdb:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
+    ports:
+      - "5006:5006"
+    networks:
+      - alinogy7
+    environment:
+      SPRING_APPLICATION_NAME: payment-service
+      SPRING_DATASOURCE_URL: jdbc:postgresql://paymentdb:5432/payment-service
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: Alinogy7
+      EUREKA_CLIENT_REGISTER_WITH_EUREKA: "true"
+      EUREKA_CLIENT_FETCH_REGISTRY: "true"
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://eureka-server:8070/eureka/"
+      EUREKA_INSTANCE_PREFER_IP_ADDRESS: "true"
+      EUREKA_INSTANCE_LEASE_RENEWAL_INTERVAL_IN_SECONDS: "10"
+
+  salon:
+    image: "alinogy7/salon-service:v1"
+    container_name: salon
+    depends_on:
+      salondb:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
+    ports:
+      - "5002:5002"
+    networks:
+      - alinogy7
+    environment:
+      SPRING_APPLICATION_NAME: salon-service
+      SPRING_DATASOURCE_URL: jdbc:postgresql://salondb:5432/salon-service
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: Alinogy7
+      EUREKA_CLIENT_REGISTER_WITH_EUREKA: "true"
+      EUREKA_CLIENT_FETCH_REGISTRY: "true"
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://eureka-server:8070/eureka/"
+      EUREKA_INSTANCE_PREFER_IP_ADDRESS: "true"
+      EUREKA_INSTANCE_LEASE_RENEWAL_INTERVAL_IN_SECONDS: "10"
+
+  service-offering:
+    image: "alinogy7/salon-service-offering-service:v1"
+    container_name: service-offering
+    depends_on:
+      service-offeringdb:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
+    ports:
+      - "5004:5004"
+    networks:
+      - alinogy7
+    environment:
+      SPRING_APPLICATION_NAME: service-offering-service
+      SPRING_DATASOURCE_URL: jdbc:postgresql://service-offeringdb:5432/service-offering
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: Alinogy7
+      EUREKA_CLIENT_REGISTER_WITH_EUREKA: "true"
+      EUREKA_CLIENT_FETCH_REGISTRY: "true"
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://eureka-server:8070/eureka/"
+      EUREKA_INSTANCE_PREFER_IP_ADDRESS: "true"
+      EUREKA_INSTANCE_LEASE_RENEWAL_INTERVAL_IN_SECONDS: "10"
+
+  gatewayserver:
+    image: "alinogy7/salon-gateway-server:v1"
+    container_name: gatewayserver
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+    ports:
+      - "5000:5000"
+    networks:
+      - alinogy7
+    environment:
+      SPRING_APPLICATION_NAME: gateway-server
+      EUREKA_CLIENT_REGISTER_WITH_EUREKA: "true"
+      EUREKA_CLIENT_FETCH_REGISTRY: "true"
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://eureka-server:8070/eureka/"
+      EUREKA_INSTANCE_PREFER_IP_ADDRESS: "true"
+      EUREKA_INSTANCE_LEASE_RENEWAL_INTERVAL_IN_SECONDS: "10"
+
+networks:
+  alinogy7:
+    driver: bridge
