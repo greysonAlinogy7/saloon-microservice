@@ -201,7 +201,7 @@ services:
       eureka-server:
         condition: service_healthy
     ports:
-      - "5006:5006"
+      - "5007:5007"
     networks:
       - alinogy7
     environment:

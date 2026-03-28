@@ -16,7 +16,7 @@ spring:
     show-sql: true
 
 server:
-  port: 5006
+  port: 5007
 
 
 

@@ -12,7 +12,8 @@ spring:
         - id: SALON-SERVICE
           uri: lb://SALON-SERVICE
           predicates:
-            - Path=/salons/**,/api/salons/**,/api/admin/salons/**
+            - Path=/api/salons/**,/api/admin/salons/**
+
 
 
         - id: BOOKING-SERVICE
