@@ -1,5 +1,6 @@
 package com.salon.payload.dto;
 
+import com.salon.domain.UserRole;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -17,4 +18,5 @@ public class SignupDTO {
     private  String password;
     private  String username;
     private List<Credentials> credentials = new ArrayList<>();
+    private UserRole roles;
 }

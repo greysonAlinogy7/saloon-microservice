@@ -2,13 +2,18 @@ package com.salon.service;
 
 
 import com.salon.payload.dto.Credentials;
+import com.salon.payload.dto.KeycloackRole;
+import com.salon.payload.dto.KeycloackUserDTO;
 import com.salon.payload.dto.SignupDTO;
-import com.salon.payload.dto.UserRequest;
+import com.salon.payload.request.UserRequest;
+import com.salon.payload.response.TokenResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Service
@@ -29,9 +34,9 @@ public class KeycloakService {
 
     private final RestTemplate restTemplate;
 
-    public  void createUser(SignupDTO signupDTO){
+    public  void createUser(SignupDTO signupDTO) throws Exception {
 
-        String ACCESS_TOKEN="";
+        String ACCESS_TOKEN=getAdminAccessToken(username, password,GRANT_TYPE, null).getAccessToken();
 
         Credentials credentials = new Credentials();
         credentials.setTemporary(false);
@@ -60,7 +65,33 @@ public class KeycloakService {
 
         if (response.getStatusCode()==HttpStatus.CREATED){
             System.out.println("user created successfully");
+
+            KeycloackUserDTO user = fetchFirstUserByUsername(signupDTO.getUsername(), ACCESS_TOKEN);
+            KeycloackRole role = getRoleByName(clientId, ACCESS_TOKEN, signupDTO.getRoles().toString());
+
+            List<KeycloackRole> roles = new ArrayList<>();
+            roles.add(role);
+
+            assignRoleToUser(user.getId(), clientId, roles, ACCESS_TOKEN);
+        } else {
+            System.out.println("user creation failed");
+            throw  new Exception(response.getBody());
         }
+
+    }
+
+    public TokenResponse getAdminAccessToken(String username, String password, String grantType, String refreshToken){
+        return new TokenResponse();
+    }
+
+    public KeycloackRole getRoleByName(String clientId, String token, String role){
+        return null;
+    }
+
+    public KeycloackUserDTO fetchFirstUserByUsername(String username, String token){
+        return null;
+    }
+    public  void assignRoleToUser(String userId, String clientId, List<KeycloackRole> roles, String token){
 
     }
 
