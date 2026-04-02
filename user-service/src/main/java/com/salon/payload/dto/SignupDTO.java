@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SignupDTO {
-    private String firstName;
+    private String fullName;
     private  String lastName;
     private  String email;
     private  String password;

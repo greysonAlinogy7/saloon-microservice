@@ -1,6 +1,9 @@
 package com.salon.payload.request;
 
+import com.salon.payload.dto.Credentials;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 public class UserRequest {
@@ -9,5 +12,6 @@ public class UserRequest {
     private  String firstName;
     private  String lastName;
     private  String email;
-    private  String password;
+    private List<Credentials> credentials;
+
 }

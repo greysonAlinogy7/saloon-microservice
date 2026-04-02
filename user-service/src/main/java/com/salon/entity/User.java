@@ -1,8 +1,10 @@
 package com.salon.entity;
 
+import com.salon.domain.UserRole;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,8 +30,9 @@ public class User {
     @Email(message = "Email should be valid")
     private  String email;
     private  String phone;
-    @NotBlank(message = "role is mandatory")
-    private  String role;
+    @Column(nullable = false)
+    @NotNull(message = "Role is required")
+    private UserRole roles;
     @NotBlank(message = "password is mandatory")
     private  String password;
     @CreationTimestamp
