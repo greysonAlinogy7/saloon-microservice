@@ -44,6 +44,11 @@ spring:
           uri: lb://USER-SERVICE
           predicates:
             - Path=/api/user/**,/api/admin/users/**,/auth/**,/users/**
+  security:
+    oauth2:
+      resource server:
+        jwt:
+          jwt-set-uri: "http://localhost:8080/realms/master/protocol/openid-connect/certs"
 
 
 server:

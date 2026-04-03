@@ -218,4 +218,36 @@ public class KeycloakService {
             throw new Exception("Failed to assign role", e);
         }
     }
+
+    public KeycloackUserDTO fetchUserProfileByJwt(String token) throws Exception {
+
+        String url = BASE_URL + "/realms/" + REALM + "/protocol/openid-connect/userinfo";
+
+        HttpHeaders headers = new HttpHeaders();
+
+        // Normalize token
+        String cleanToken = token.replace("Bearer ", "");
+
+        headers.setBearerAuth(cleanToken);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+
+        try {
+            ResponseEntity<KeycloackUserDTO> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    requestEntity,
+                    KeycloackUserDTO.class
+            );
+
+            return response.getBody();
+
+        } catch (HttpClientErrorException e) {
+            System.err.println("Status: " + e.getStatusCode());
+            System.err.println("Response: " + e.getResponseBodyAsString());
+
+            throw new Exception("Keycloak error: " + e.getResponseBodyAsString(), e);
+        }
+    }
 }

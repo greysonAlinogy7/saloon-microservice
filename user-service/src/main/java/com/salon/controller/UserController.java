@@ -35,6 +35,12 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
+    @GetMapping("/profile")
+    public  ResponseEntity<User> getUserProfile(@RequestHeader("Authorization") String jwt) throws Exception {
+        User createdUser = userService.getUserFromJwt(jwt);
+        return new ResponseEntity<>(createdUser, HttpStatus.OK);
+    }
+
     @PutMapping("/{userId}")
     public ResponseEntity<User> updateUser(@RequestBody User user, @PathVariable("userId") Long userId) throws Exception {
         User updatedUser = userService.getUserById(userId);
