@@ -20,12 +20,14 @@ public class AuthService implements IAuthService {
 
     @Override
     public AuthResponse login(String username, String password) throws Exception {
-        TokenResponse tokenResponse = keycloakService.getAdminAccessToken();
+        // 1. Get a token SPECIFIC to this user
+        TokenResponse tokenResponse = keycloakService.getNewUserToken(username, password);
 
         AuthResponse authResponse = new AuthResponse();
         authResponse.setRefresh_token(tokenResponse.getRefreshToken());
         authResponse.setJwt(tokenResponse.getAccessToken());
-        authResponse.setMessage("logged in successfully");
+        authResponse.setMessage("Logged in successfully");
+
         return authResponse;
     }
 

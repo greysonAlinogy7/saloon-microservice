@@ -219,6 +219,23 @@ public class KeycloakService {
         }
     }
 
+    public TokenResponse getNewUserToken(String username, String password) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        body.add("grant_type", "password");
+        body.add("client_id", CLIENT_ID);
+        body.add("client_secret", CLIENT_SECRET);
+        body.add("username", username); // Pass the actual username
+        body.add("password", password); // Pass the actual password
+
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
+
+        // This calls Keycloak directly for a NEW session for THIS user
+        return restTemplate.postForObject(TOKEN_URL, request, TokenResponse.class);
+    }
+
     public KeycloackUserDTO fetchUserProfileByJwt(String token) throws Exception {
 
         String url = BASE_URL + "/realms/" + REALM + "/protocol/openid-connect/userinfo";
