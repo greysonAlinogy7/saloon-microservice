@@ -1,6 +1,7 @@
 package com.salon.payload.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.salon.domain.UserRole;
 import lombok.Data;
 
 @Data
@@ -17,4 +18,7 @@ public class TokenResponse {
 
     @JsonProperty("scope")
     private String scope;
+
+    @JsonProperty("role")
+    private UserRole role;
 }

@@ -1,5 +1,7 @@
 package com.salon.controller;
 
+import com.salon.client.ServiceFeignClient;
+import com.salon.client.UserFeignClient;
 import com.salon.domain.BookingStatus;
 import com.salon.domain.SalonReport;
 import com.salon.entity.Booking;
@@ -26,14 +28,16 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BookingController {
     private  final BookingService bookingService;
+    private  final UserFeignClient userFeignClient;
+    private  final ServiceFeignClient serviceFeignClient;
 
     @PostMapping
     public ResponseEntity<Booking> createBooking(
             @RequestParam Long salonId,
-            @RequestBody BookingRequest bookingRequest) throws Exception {
+            @RequestBody BookingRequest bookingRequest, @RequestHeader("Authorization") String jwt) throws Exception {
 
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(1L);
+        UserDTO userDTO = userFeignClient.getUserProfile(jwt).getBody();
+
 
         SalonDTO salonDTO = new SalonDTO();
         salonDTO.setId(salonId);

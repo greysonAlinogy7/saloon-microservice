@@ -12,36 +12,36 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/user")
+@RequestMapping
 public class UserController {
     private  final UserService userService;
 
-    @PostMapping
+    @PostMapping("/api/user")
     public ResponseEntity<User> createUser(@RequestBody @Valid User user){
         User createdUser = userService.createUser(user);
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
 
-    @GetMapping()
+    @GetMapping("/api/user")
     public ResponseEntity<List<User>> getUser(){
         List<User> userList = userService.getAllUser();
         return new ResponseEntity<>(userList, HttpStatus.OK);
 
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("//api/user/{userId}")
     public  ResponseEntity<User> getUserById(@PathVariable("userId") Long userId) throws Exception {
         User user = userService.getUserById(userId);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @GetMapping("/profile")
+    @GetMapping("/api/user/profile")
     public  ResponseEntity<User> getUserProfile(@RequestHeader("Authorization") String jwt) throws Exception {
         User createdUser = userService.getUserFromJwt(jwt);
         return new ResponseEntity<>(createdUser, HttpStatus.OK);
     }
 
-    @PutMapping("/{userId}")
+    @PutMapping("/api/user/{userId}")
     public ResponseEntity<User> updateUser(@RequestBody User user, @PathVariable("userId") Long userId) throws Exception {
         User updatedUser = userService.getUserById(userId);
        return new ResponseEntity<>(updatedUser, HttpStatus.OK);
@@ -49,7 +49,7 @@ public class UserController {
     }
 
 
-    @DeleteMapping("/{userId}")
+    @DeleteMapping("/api/user/{userId}")
     public  ResponseEntity<String> deleteUserById(@PathVariable("userId") Long userId) throws Exception {
         userService.deleteUser(userId);
         return new ResponseEntity<>("user deleted successfully", HttpStatus.OK);

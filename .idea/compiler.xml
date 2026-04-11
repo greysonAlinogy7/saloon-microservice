@@ -11,7 +11,7 @@
         <module name="gateway-server" />
         <module name="user-service" />
       </profile>
-      <profile name="Annotation profile for service-offering-service" enabled="true">
+      <profile name="Annotation profile for category-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -20,8 +20,8 @@
         </processorPath>
         <module name="service-offering-service" />
         <module name="saloon-service" />
-        <module name="payment-service" />
         <module name="category-service" />
+        <module name="payment-service" />
         <module name="booking-service" />
       </profile>
     </annotationProcessing>

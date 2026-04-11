@@ -27,6 +27,7 @@ public class AuthService implements IAuthService {
         authResponse.setRefresh_token(tokenResponse.getRefreshToken());
         authResponse.setJwt(tokenResponse.getAccessToken());
         authResponse.setMessage("Logged in successfully");
+        authResponse.setRole(tokenResponse.getRole());
 
         return authResponse;
     }
