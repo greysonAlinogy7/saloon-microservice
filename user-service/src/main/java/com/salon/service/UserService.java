@@ -1,13 +1,12 @@
 package com.salon.service;
 
+
 import com.salon.entity.User;
 import com.salon.exception.UserException;
-import com.salon.payload.dto.KeycloackUserDTO;
 import com.salon.repository.UserRepository;
 import com.salon.service.impl.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -15,7 +14,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService implements IUserService {
     private  final UserRepository userRepository;
-    private  final KeycloakService keycloakService;
+
 
     @Override
     public User createUser(User user) {
@@ -59,16 +58,13 @@ public class UserService implements IUserService {
         User  existingUser = otp.get();
         existingUser.setFullName(user.getFullName());
         existingUser.setEmail(user.getEmail());
-        existingUser.setPhone(user.getPhone());
-        existingUser.setRoles(user.getRoles());
-        existingUser.setUsername(user.getUsername());
+
         return userRepository.save(existingUser);
     }
 
-    @Override
-    public User getUserFromJwt(String jwt) throws Exception {
-        KeycloackUserDTO keycloackUserDTO = keycloakService.fetchUserProfileByJwt(jwt);
-        User user = userRepository.findByEmail(keycloackUserDTO.getEmail());
-        return user;
-    }
+
+
+
+
+
 }

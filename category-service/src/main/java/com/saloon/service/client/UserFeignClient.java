@@ -2,6 +2,7 @@ package com.saloon.service.client;
 
 
 
+
 import com.saloon.payload.UserDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;

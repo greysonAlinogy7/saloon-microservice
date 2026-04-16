@@ -25,7 +25,7 @@ public class ServiceOfferingService implements IServiceOfferingService {
         ServiceOffering serviceOffering = new ServiceOffering();
         serviceOffering.setImage(serviceDTO.getImage());
         serviceOffering.setSalonId(salonDTO.getId());
-        serviceOffering.setCategoryId(serviceDTO.getCategoryId());
+        serviceOffering.setCategoryId(serviceDTO.getCategory());
         serviceOffering.setName(serviceDTO.getName());
         serviceOffering.setDescription(serviceDTO.getDescription());
         serviceOffering.setPrice(serviceDTO.getPrice());

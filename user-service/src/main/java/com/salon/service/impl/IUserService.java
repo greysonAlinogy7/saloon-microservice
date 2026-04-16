@@ -1,5 +1,7 @@
 package com.salon.service.impl;
 
+
+
 import com.salon.entity.User;
 import com.salon.exception.UserException;
 
@@ -11,5 +13,6 @@ public interface IUserService {
     List<User> getAllUser();
     void deleteUser(Long userId) throws UserException;
     User updateUser(Long userId, User user) throws UserException;
-    User getUserFromJwt(String jwt) throws Exception;
+
+
 }

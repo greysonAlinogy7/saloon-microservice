@@ -1,18 +1,17 @@
 package com.salon.payload.response;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
+@Data
 @AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
+
 public class ExceptionResponse {
-    private  String message;
-    private  String error;
+
+    private String message;
+    private String details;
     private LocalDateTime timestamp;
+
 }
