@@ -13,21 +13,21 @@ import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/categories")
+@RequestMapping("/api")
 public class CategoryController {
 
     private  final CategoryService categoryService;
 
 
 
-    @GetMapping("/{id}")
+    @GetMapping("/categories/{id}")
     public ResponseEntity<Category> getCategoryById(@PathVariable Long id) throws Exception {
         Category categories = categoryService.getCategoryById(id);
         return ResponseEntity.ok(categories);
 
     }
 
-    @GetMapping("/salon/{id}")
+    @GetMapping("/categories/salon/{id}")
     public ResponseEntity<Set<Category>> getCategoryBySalon(@PathVariable Long id) throws Exception {
         Set<Category> categories = categoryService.getAllCategoriesBySalon(id);
         return ResponseEntity.ok(categories);

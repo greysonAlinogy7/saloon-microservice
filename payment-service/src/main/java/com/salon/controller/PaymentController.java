@@ -11,13 +11,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/payments")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class PaymentController {
     private PaymentService paymentService;
 
 
-    @PostMapping("/create")
+    @PostMapping("/payments/create")
     public ResponseEntity<PaymentLinkResponse> createPaymentLink(@RequestBody BookingDTO booking, @RequestParam PaymentMethod paymentMethod){
         UserDTO user = new UserDTO();
         user.setFullName("greyson");
@@ -29,14 +29,14 @@ public class PaymentController {
 
     }
 
-    @GetMapping("/{paymentId}")
+    @GetMapping("/payments/{paymentId}")
     public ResponseEntity<PaymentOrder> getPaymentById(@PathVariable Long paymentId) throws Exception {
         PaymentOrder response = paymentService.getPaymentOrderById(paymentId);
         return ResponseEntity.ok(response);
 
     }
 
-    @PatchMapping("/proceed")
+    @PatchMapping("/payments/proceed")
     public ResponseEntity<Boolean> processPayment(@RequestParam Long paymentId, @RequestParam String paymentLinkId) throws Exception {
         PaymentOrder paymentOrder = paymentService.getPaymentOrderById(paymentId);
         Boolean response = paymentService.proceedPayment(paymentOrder,  paymentId, paymentLinkId);

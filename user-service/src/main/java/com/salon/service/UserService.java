@@ -6,6 +6,9 @@ import com.salon.exception.UserException;
 import com.salon.repository.UserRepository;
 import com.salon.service.impl.IUserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -62,9 +65,19 @@ public class UserService implements IUserService {
         return userRepository.save(existingUser);
     }
 
+    @Override
+    public User getCurrentUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
+        if (auth == null || !auth.isAuthenticated()) {
+            return null;
+        }
 
+        UserDetails userDetails = (UserDetails) auth.getPrincipal();
 
+        // Example: fetch from DB using username
+        return userRepository.findByEmail(userDetails.getUsername());
+    }
 
 
 }

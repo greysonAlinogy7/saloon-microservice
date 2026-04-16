@@ -1,15 +1,16 @@
+server:
+  port: 5000
+
 spring:
   application:
     name: gateway-server
 
-  # === Spring Cloud Gateway (NEW namespace for 2025.x / Gateway 4.3+) ===
   cloud:
     gateway:
       server:
         webflux:
-          discovery:
-            locator:
-              enabled: false
+
+          # ==================== ROUTES ====================
           routes:
             - id: SALON-SERVICE
               uri: lb://SALON-SERVICE
@@ -39,20 +40,46 @@ spring:
             - id: USER-SERVICE
               uri: lb://USER-SERVICE
               predicates:
-                - Path=/api/user/**,/api/admin/users/**,/auth/**,/users/**
+                - Path=/auth/**,/api/user/**,/api/admin/users/**,/users/**
 
+          # ==================== DEFAULT FILTERS ====================
+          default-filters:
+            # Fix: Add strategy explicitly (RETAIN_UNIQUE is safest for CORS)
+            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin, RETAIN_UNIQUE
 
+          # ==================== GLOBAL CORS ====================
+          globalcors:
+            cors-configurations:
+              '[/**]':
+                allowedOrigins:
+                  - "http://localhost:3000"      # ← Change to your actual frontend port
+                  - "http://localhost:4200"
+                  - "http://localhost:5000"
+                  # - "https://your-production-domain.com"
+                allowedMethods:
+                  - GET
+                  - POST
+                  - PUT
+                  - PATCH
+                  - DELETE
+                  - OPTIONS
+                allowedHeaders: "*"
+                exposedHeaders:
+                  - Authorization
+                  - Content-Disposition
+                allowCredentials: true
+                maxAge: 3600
 
-  # === OAuth2 Resource Server (Keycloak) ===
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: http://localhost:8080/realms/master   # Recommended for Keycloak
+          # HTTP Client
+          httpclient:
+            connect-timeout: 5000
+            response-timeout: 10s
 
-server:
-  port: 5000
+          discovery:
+            locator:
+              enabled: false
 
+# ==================== EUREKA ====================
 eureka:
   instance:
     hostname: localhost
@@ -62,7 +89,7 @@ eureka:
     service-url:
       defaultZone: http://localhost:8070/eureka/
 
-# Optional: Helpful for debugging security issues
+# ==================== LOGGING ====================
 logging:
   level:
     org.springframework.security: DEBUG

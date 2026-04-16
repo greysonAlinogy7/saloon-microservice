@@ -13,14 +13,14 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/service-offering/salon-owner")
+@RequestMapping("/api")
 public class SalonServiceOfferingController {
     private  final ServiceOfferingService serviceOfferingService;
     private  final SalonFeignClient salonFeignClient;
     private  final CategoryFeignClient categoryFeignClient;
 
 
-    @PostMapping()
+    @PostMapping("/service-offering/salon-owner")
     public ResponseEntity<ServiceOffering> createService(@RequestBody ServiceDTO serviceDTO, @RequestHeader("Authorization") String jwt) throws Exception {
 
         SalonDTO salonDTO = salonFeignClient.getSalonByOwnerId(jwt).getBody();
@@ -30,7 +30,7 @@ public class SalonServiceOfferingController {
         return ResponseEntity.ok(serviceOfferings);
     }
 
-    @PutMapping()
+    @PutMapping("/service-offering/salon-owner/{serverId}")
     public ResponseEntity<ServiceOffering> updateService(@PathVariable Long serviceId ,@RequestBody ServiceOffering serviceOffering) throws Exception {
         ServiceOffering serviceOfferings = serviceOfferingService.updateService(serviceId, serviceOffering);
         return ResponseEntity.ok(serviceOfferings);

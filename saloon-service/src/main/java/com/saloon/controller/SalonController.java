@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/salons")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class SalonController {
 
     private  final SalonService salonService;
     private  final UserFeignClient userFeignClient;
 
-    @PostMapping()
+    @PostMapping("/salons")
     public ResponseEntity<SalonDTO> createSalon(@RequestBody SalonDTO salonDTO, @RequestHeader("Authorization") String jwt) throws Exception {
         UserDTO userDTO = userFeignClient.getUserProfile(jwt).getBody();
         Salon salon = salonService.createSalon(salonDTO, userDTO);
@@ -29,7 +29,7 @@ public class SalonController {
         return new ResponseEntity<>(salonDTO1, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{salonId}")
+    @PutMapping("/salons/{salonId}")
     public ResponseEntity<SalonDTO> updateSalon(@PathVariable Long salonId ,@RequestBody SalonDTO salonDTO, @RequestHeader("Authorization") String jwt) throws Exception {
         UserDTO userDTO = userFeignClient.getUserProfile(jwt).getBody();
         Salon salon = salonService.updateSalon(salonDTO, userDTO, salonId);
@@ -37,7 +37,7 @@ public class SalonController {
         return new ResponseEntity<>(salonDTO1, HttpStatus.CREATED);
     }
 
-    @GetMapping()
+    @GetMapping("/salons")
     public ResponseEntity<List<SalonDTO>> getSalon() throws Exception {
         List<Salon> salon = salonService.getAllSalons();
         List<SalonDTO> salonDTOS=salon.stream().map((salons) -> {
@@ -48,14 +48,14 @@ public class SalonController {
         return new ResponseEntity<>(salonDTOS, HttpStatus.OK);
     }
 
-    @GetMapping("/{salonId}")
+    @GetMapping("/salons/{salonId}")
     public ResponseEntity<SalonDTO> getSalonById(@PathVariable("salonId") Long salonId) throws Exception {
        Salon salon = salonService.getSalonById(salonId);
        SalonDTO salonDTO = SalonMapper.toDTO(salon);
        return  ResponseEntity.ok(salonDTO);
     }
 
-    @GetMapping("/search")
+    @GetMapping("/salons/search")
     public ResponseEntity<List<SalonDTO>> searchSalon(@RequestParam("city") String city) throws Exception {
         List<Salon> salon = salonService.searchSalonByCity(city);
         List<SalonDTO> salonDTO =salon.stream().map((salons) -> {
@@ -65,13 +65,13 @@ public class SalonController {
         return  ResponseEntity.ok(salonDTO);
     }
 
-    @GetMapping("/api/salons/owner")
-    public ResponseEntity<SalonDTO> getSalonByOwnerId( @RequestHeader("Authorization") String jwt) throws Exception {
+    @GetMapping("/salons/owner")
+    public ResponseEntity<SalonDTO> getSalonByOwnerId( @PathVariable Long ownerId, @RequestHeader("Authorization") String jwt) throws Exception {
         UserDTO userDTO = userFeignClient.getUserProfile(jwt).getBody();
         if (userDTO==null){
             throw  new Exception("user not found");
         }
-        Salon salon = salonService.getSalonByOwnerId(userDTO.getId());
+        Salon salon = salonService.getSalonByOwnerId(ownerId);
         SalonDTO salonDTO = SalonMapper.toDTO(salon);
         return  ResponseEntity.ok(salonDTO);
     }

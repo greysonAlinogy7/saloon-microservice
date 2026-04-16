@@ -13,37 +13,37 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/user")
+@RequestMapping("/api")
 public class UserController {
     private  final UserService userService;
     private final AuthService authService;
 
-    @PostMapping()
+    @PostMapping("/user")
     public ResponseEntity<User> createUser(@RequestBody @Valid User user){
         User createdUser = userService.createUser(user);
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
 
-    @GetMapping()
+    @GetMapping("/user")
     public ResponseEntity<List<User>> getUser(){
         List<User> userList = userService.getAllUser();
         return new ResponseEntity<>(userList, HttpStatus.OK);
 
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("/user/{userId}")
     public  ResponseEntity<User> getUserById(@PathVariable("userId") Long userId) throws Exception {
         User user = userService.getUserById(userId);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @GetMapping("/profile")
-    public  ResponseEntity<User> getUserProfile(@RequestHeader("Authorization") String jwt) throws Exception {
-        User createdUser = authService.getUserByProfile(jwt);
+    @GetMapping("/user/profile")
+    public  ResponseEntity<User> getUserProfile() throws Exception {
+        User createdUser = userService.getCurrentUser();
         return new ResponseEntity<>(createdUser, HttpStatus.OK);
     }
 
-    @PutMapping("/{userId}")
+    @PutMapping("/user/{userId}")
     public ResponseEntity<User> updateUser(@RequestBody User user, @PathVariable("userId") Long userId) throws Exception {
         User updatedUser = userService.getUserById(userId);
        return new ResponseEntity<>(updatedUser, HttpStatus.OK);

@@ -24,14 +24,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/bookings")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class BookingController {
     private  final BookingService bookingService;
     private  final UserFeignClient userFeignClient;
     private  final ServiceFeignClient serviceFeignClient;
 
-    @PostMapping
+    @PostMapping("/bookings")
     public ResponseEntity<Booking> createBooking(
             @RequestParam Long salonId,
             @RequestBody BookingRequest bookingRequest, @RequestHeader("Authorization") String jwt) throws Exception {
@@ -63,7 +63,7 @@ public class BookingController {
 
     }
 
-    @GetMapping("/customer")
+    @GetMapping("/bookings/customer")
     public ResponseEntity<Set<BookingDTO>> getBookingByCustomer(){
 
         List<Booking> bookings = bookingService.getBookingByCustomer(1L);
@@ -71,21 +71,21 @@ public class BookingController {
 
     }
 
-    @GetMapping("/{bookingId}")
+    @GetMapping("/bookings/{bookingId}")
     public ResponseEntity<BookingDTO> getBookingBySalonId(@PathVariable Long bookingId) throws Exception {
         Booking bookings = bookingService.getBookingById(bookingId);
         return ResponseEntity.ok(BookingMapper.toDTO(bookings));
 
     }
 
-    @PutMapping("/{bookingId}/status")
+    @PutMapping("/bookings/{bookingId}/status")
     public ResponseEntity<BookingDTO> updateBookingStatus(@PathVariable Long bookingId, @RequestParam BookingStatus status) throws Exception {
         Booking bookings = bookingService.updateBookingStatus(bookingId, status);
         return ResponseEntity.ok(BookingMapper.toDTO(bookings));
 
     }
 
-    @GetMapping("/slot/salon/{salonId}/date/{date}")
+    @GetMapping("/bookings/slot/salon/{salonId}/date/{date}")
     public ResponseEntity<List<BookingSlotDTO>> getBookingByDate(@PathVariable Long salonId, @RequestParam LocalDate date) throws Exception {
        List <Booking> bookings = bookingService.getBookingByDate(date, salonId);
        List<BookingSlotDTO> slotDTOS=bookings.stream()
@@ -98,7 +98,7 @@ public class BookingController {
         return ResponseEntity.ok(slotDTOS);
     }
 
-    @GetMapping("/report")
+    @GetMapping("/bookings/report")
     public ResponseEntity<SalonReport> getSalonReport() throws Exception {
         SalonReport report = bookingService.getSalonReport(1L);
         return ResponseEntity.ok(report);
