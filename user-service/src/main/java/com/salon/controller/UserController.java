@@ -38,9 +38,11 @@ public class UserController {
     }
 
     @GetMapping("/user/profile")
-    public  ResponseEntity<User> getUserProfile() throws Exception {
-        User createdUser = userService.getCurrentUser();
-        return new ResponseEntity<>(createdUser, HttpStatus.OK);
+    public ResponseEntity<User> getUserProfile(@RequestHeader("Authorization") String jwt){
+        User user = authService.getUserByProfile(jwt);
+        user.setPassword(null);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+
     }
 
     @PutMapping("/user/{userId}")

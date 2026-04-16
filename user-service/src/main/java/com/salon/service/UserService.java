@@ -65,19 +65,8 @@ public class UserService implements IUserService {
         return userRepository.save(existingUser);
     }
 
-    @Override
-    public User getCurrentUser() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        if (auth == null || !auth.isAuthenticated()) {
-            return null;
-        }
 
-        UserDetails userDetails = (UserDetails) auth.getPrincipal();
-
-        // Example: fetch from DB using username
-        return userRepository.findByEmail(userDetails.getUsername());
-    }
 
 
 }

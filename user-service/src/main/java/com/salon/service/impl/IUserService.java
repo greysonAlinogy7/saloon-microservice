@@ -13,7 +13,7 @@ public interface IUserService {
     List<User> getAllUser();
     void deleteUser(Long userId) throws UserException;
     User updateUser(Long userId, User user) throws UserException;
-    User getCurrentUser();
+
 
 
 }
